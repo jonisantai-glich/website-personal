@@ -9,14 +9,38 @@ const claimMode = document.getElementById("claimMode");
 
 const claimSender = document.getElementById("claimSender");
 const claimMessage = document.getElementById("claimMessage");
-const wheel = document.getElementById("wheel");
+const lotteryDisplay = document.getElementById("lotteryDisplay");
 const labels = document.getElementById("labels");
 const spinBtn = document.getElementById("spinBtn");
 const state = document.getElementById("state");
 
 let remaining = [];
 let spinning = false;
-let rotation = 0;
+let claimKey = "";
+let isClaimLocked = false;
+
+function getClaimStore() {
+  try {
+    return JSON.parse(localStorage.getItem("spinClaims") || "{}");
+  } catch (_) {
+    return {};
+  }
+}
+
+function setClaimStore(data) {
+  try {
+    localStorage.setItem("spinClaims", JSON.stringify(data));
+  } catch (_) {}
+}
+
+function lockClaim(prize) {
+  if (!claimKey) return;
+  const store = getClaimStore();
+  store[claimKey] = { claimed: true, prize };
+  setClaimStore(store);
+  isClaimLocked = true;
+  spinBtn.disabled = true;
+}
 
 function toRp(n) {
   return "Rp " + new Intl.NumberFormat("id-ID").format(Math.max(0, n));
@@ -72,27 +96,17 @@ function randomSplit(total, count, rng) {
   return arr;
 }
 
-function buildWheel(values) {
+function buildPrizeList(values) {
   if (!values.length) {
-    wheel.style.background = "conic-gradient(#eee 0deg, #eee 360deg)";
     labels.innerHTML = "";
     return;
   }
-
-  const colors = ["#ffb347", "#ffd59e", "#7cc7ff", "#b2e1ff", "#ffd0a8", "#9ee7c5"];
-  const segment = 360 / values.length;
-  const stops = values.map((_, i) => {
-    const start = i * segment;
-    const end = (i + 1) * segment;
-    return `${colors[i % colors.length]} ${start}deg ${end}deg`;
-  }).join(", ");
-  wheel.style.background = `conic-gradient(${stops})`;
 
   labels.innerHTML = "";
   values.forEach((v, i) => {
     const row = document.createElement("div");
     row.className = "label";
-    row.innerHTML = `<span>Spin ${i + 1}</span><strong>${toRp(v)}</strong>`;
+    row.innerHTML = `<span>Nominal ${i + 1}</span><strong>${toRp(v)}</strong>`;
     labels.appendChild(row);
   });
 }
@@ -142,10 +156,10 @@ copyBtn.addEventListener("click", async () => {
 
 shareBtn.addEventListener("click", async () => {
   if (!giftLink.value) return;
-  const text = "Aku kirim hadiah. Spin link ini:";
+  const text = "Aku kirim hadiah. Undi link ini:";
   if (navigator.share) {
     try {
-      await navigator.share({ title: "Spin Hadiah", text, url: giftLink.value });
+      await navigator.share({ title: "Undian Hadiah", text, url: giftLink.value });
       return;
     } catch (_) {}
   }
@@ -166,18 +180,40 @@ function initClaim(params) {
   const count = Math.max(1, Number(params.get("count") || 1));
   const type = params.get("type") || "equal";
   const msg = params.get("msg") || "-";
-  const seed = hashString(params.get("id") || "seed");
+  const id = params.get("id") || "seed";
+  const seed = hashString(id);
   const rng = mulberry32(seed);
   const values = type === "equal" ? equalSplit(amount, count) : randomSplit(amount, count, rng);
+  claimKey = `gift:${id}`;
 
   remaining = values.slice();
   claimSender.textContent = sender;
   claimMessage.textContent = msg;
-  buildWheel(remaining);
+  buildPrizeList(values);
+  lotteryDisplay.textContent = "Siap diundi";
+
+  const store = getClaimStore();
+  const claim = store[claimKey];
+  if (claim && claim.claimed) {
+    isClaimLocked = true;
+    spinBtn.disabled = true;
+    lotteryDisplay.textContent = toRp(Number(claim.prize) || 0);
+    state.textContent = "Hadiah ini sudah diklaim: " + toRp(Number(claim.prize) || 0);
+    state.className = "state bad";
+    return;
+  }
+
+  isClaimLocked = false;
+  spinBtn.disabled = false;
 }
 
 spinBtn.addEventListener("click", () => {
   if (spinning) return;
+  if (isClaimLocked) {
+    state.textContent = "Hadiah ini sudah diklaim.";
+    state.className = "state bad";
+    return;
+  }
   if (!remaining.length) {
     state.textContent = "Hadiah sudah habis.";
     state.className = "state bad";
@@ -185,17 +221,23 @@ spinBtn.addEventListener("click", () => {
   }
 
   spinning = true;
+  spinBtn.disabled = true;
   const index = Math.floor(Math.random() * remaining.length);
-  const segment = 360 / remaining.length;
-  const target = 360 - (index * segment + segment / 2);
-  rotation += 360 * 4 + target;
-  wheel.style.transform = `rotate(${rotation}deg)`;
-  state.textContent = "Memutar...";
+  state.textContent = "Mengundi...";
   state.className = "state";
+  let tick = 0;
+  const preview = setInterval(() => {
+    const tempIndex = Math.floor(Math.random() * remaining.length);
+    lotteryDisplay.textContent = toRp(remaining[tempIndex]);
+    tick += 1;
+    if (tick > 16) clearInterval(preview);
+  }, 90);
 
   setTimeout(() => {
-    const prize = remaining.splice(index, 1)[0];
-    buildWheel(remaining);
+    clearInterval(preview);
+    const prize = remaining[index];
+    lotteryDisplay.textContent = toRp(prize);
+    lockClaim(prize);
     state.textContent = "Selamat! Kamu dapat " + toRp(prize);
     state.className = "state ok";
     spinning = false;
