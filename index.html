@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Spin Hadiah</title>
-  <meta name="description" content="spin cepat. Penerima membuka link dan melakukan spin acak untuk mendapatkan hadiah.">
+  <title>Undian Hadiah</title>
+  <meta name="description" content="undian cepat. Penerima membuka link dan melakukan undi acak untuk mendapatkan hadiah.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,13 +13,13 @@
 <body>
   <main class="wrap">
     <section class="hero">
-      <h1>CEPAT SPIN</h1>
-      <p>spin cepat, bagikan, lalu penerima melakukan spin acak untuk mendapatkan hadiah.</p>
+      <h1>CEPAT UNDI</h1>
+      <p>buat undian, bagikan, lalu penerima melakukan undi acak untuk mendapatkan hadiah.</p>
     </section>
 
     <section class="grid">
       <article class="card" id="createMode">
-        <h2 class="title">spin cepat</h2>
+        <h2 class="title">undian cepat</h2>
         <form id="giftForm">
           <div class="field">
             <label for="sender">Nama Pengirim</label>
@@ -31,7 +31,7 @@
               <input id="amount" name="amount" type="number" min="1000" step="1000" value="200000">
             </div>
             <div class="field">
-              <label for="count">Jumlah Spin</label>
+              <label for="count">Jumlah Nominal</label>
               <input id="count" name="count" type="number" min="1" max="20" value="8">
             </div>
           </div>
@@ -61,23 +61,21 @@
             <button id="shareBtn" class="btn alt" type="button">Bagikan</button>
             <button id="openBtn" class="btn soft" type="button">Buka Link</button>
           </div>
-          <p class="hint">Penerima membuka link, lalu melakukan spin untuk klaim hadiah.</p>
+          <p class="hint">Penerima membuka link, lalu melakukan undi sekali untuk klaim hadiah.</p>
         </div>
       </article>
 
       <aside class="card" id="claimMode">
-        <h2 class="title">Spin Hadiah</h2>
+        <h2 class="title">Undian Hadiah</h2>
         <div class="hint">Dikirim oleh <strong id="claimSender">-</strong></div>
         <div class="hint" id="claimMessage">-</div>
         <div class="wheel-wrap">
-          <div class="wheel-shell">
-            <div class="pointer"></div>
-            <div id="wheel" class="wheel">
-              <div class="wheel-center">SPIN</div>
-            </div>
+          <div class="lottery-box">
+            <div class="lottery-title">Nominal Pemenang</div>
+            <div id="lotteryDisplay" class="lottery-value">Siap diundi</div>
           </div>
-          <button id="spinBtn" class="btn primary" type="button">Spin Sekarang</button>
-          <div id="state" class="state">Belum ada spin.</div>
+          <button id="spinBtn" class="btn primary" type="button">Undi Sekarang</button>
+          <div id="state" class="state">Belum ada undian.</div>
         </div>
         <div id="labels" class="wheel-labels"></div>
       </aside>
