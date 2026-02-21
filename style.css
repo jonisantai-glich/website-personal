@@ -1,0 +1,220 @@
+:root {
+  --bg: #f7f5f0;
+  --ink: #1d1a17;
+  --muted: #6b6762;
+  --card: #ffffff;
+  --accent: #ff8a00;
+  --accent-2: #1a73e8;
+  --green: #10a36f;
+  --line: #e5e0d8;
+  --shadow: 0 14px 34px rgba(24, 20, 16, 0.12);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, #ffe7c7 0, transparent 35%),
+    radial-gradient(circle at 90% 10%, #d7eaff 0, transparent 35%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+.wrap {
+  width: min(980px, 92vw);
+  margin: 24px auto 40px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #ff9b25, #ff6b00);
+  color: #fff;
+  border-radius: 24px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow);
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 5vw, 36px);
+}
+
+.hero p { margin: 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: 1.1fr 0.9fr; }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.title { margin: 0 0 10px; }
+.field { margin-bottom: 10px; }
+
+label {
+  display: block;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: var(--muted);
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  font: inherit;
+  background: #fff;
+}
+
+textarea { min-height: 70px; resize: vertical; }
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn.primary { background: var(--green); color: #fff; }
+.btn.soft { background: #f1eee9; color: var(--ink); }
+.btn.alt { background: var(--accent-2); color: #fff; }
+
+.hint { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+
+.hidden { display: none; }
+
+.link-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.link-box input { font-size: 12px; background: #f7f6f2; }
+
+.wheel-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.wheel-shell {
+  position: relative;
+  width: 280px;
+  display: grid;
+  justify-items: center;
+}
+
+.wheel {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 10px solid #fff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  position: relative;
+  background: conic-gradient(
+    #ffb347 0deg,
+    #ffd59e 60deg,
+    #7cc7ff 120deg,
+    #b2e1ff 180deg,
+    #ffb347 240deg,
+    #ffd59e 300deg,
+    #7cc7ff 360deg
+  );
+  transition: transform 3.2s cubic-bezier(0.12, 0.65, 0.15, 1);
+  display: grid;
+  place-items: center;
+}
+
+.wheel-center {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 6px solid #f2eee7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3b372f;
+  letter-spacing: 0.8px;
+}
+
+.pointer {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 24px solid #1d1a17;
+  z-index: 2;
+}
+
+.pointer::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: -26px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1d1a17;
+}
+
+.wheel-labels {
+  width: 100%;
+  max-height: 130px;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  padding-right: 4px;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 8px;
+  background: #fff;
+}
+
+.state { font-weight: 700; margin-top: 6px; }
+.ok { color: var(--green); }
+.bad { color: #cc2f2f; }

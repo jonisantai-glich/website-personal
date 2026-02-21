@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spin Hadiah</title>
+  <meta name="description" content="spin cepat. Penerima membuka link dan melakukan spin acak untuk mendapatkan hadiah.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>CEPAT SPIN</h1>
+      <p>spin cepat, bagikan, lalu penerima melakukan spin acak untuk mendapatkan hadiah.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card" id="createMode">
+        <h2 class="title">spin cepat</h2>
+        <form id="giftForm">
+          <div class="field">
+            <label for="sender">Nama Pengirim</label>
+            <input id="sender" name="sender" type="text" required placeholder="Contoh: Kak Raka">
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="amount">Total Hadiah (Rp)</label>
+              <input id="amount" name="amount" type="number" min="1000" step="1000" value="200000">
+            </div>
+            <div class="field">
+              <label for="count">Jumlah Spin</label>
+              <input id="count" name="count" type="number" min="1" max="20" value="8">
+            </div>
+          </div>
+          <div class="field">
+            <label for="type">Tipe Pembagian</label>
+            <select id="type" name="type">
+              <option value="equal">Rata</option>
+              <option value="random">Acak</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Ucapan</label>
+            <textarea id="message" name="message" placeholder="Selamat ya, semoga berkah."></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Generate Link</button>
+            <button class="btn soft" type="reset">Reset</button>
+          </div>
+        </form>
+
+        <div id="result" class="hidden">
+          <div class="link-box">
+            <input id="giftLink" type="text" readonly>
+            <button id="copyBtn" class="btn soft" type="button">Copy</button>
+          </div>
+          <div class="btn-row">
+            <button id="shareBtn" class="btn alt" type="button">Bagikan</button>
+            <button id="openBtn" class="btn soft" type="button">Buka Link</button>
+          </div>
+          <p class="hint">Penerima membuka link, lalu melakukan spin untuk klaim hadiah.</p>
+        </div>
+      </article>
+
+      <aside class="card" id="claimMode">
+        <h2 class="title">Spin Hadiah</h2>
+        <div class="hint">Dikirim oleh <strong id="claimSender">-</strong></div>
+        <div class="hint" id="claimMessage">-</div>
+        <div class="wheel-wrap">
+          <div class="wheel-shell">
+            <div class="pointer"></div>
+            <div id="wheel" class="wheel">
+              <div class="wheel-center">SPIN</div>
+            </div>
+          </div>
+          <button id="spinBtn" class="btn primary" type="button">Spin Sekarang</button>
+          <div id="state" class="state">Belum ada spin.</div>
+        </div>
+        <div id="labels" class="wheel-labels"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
